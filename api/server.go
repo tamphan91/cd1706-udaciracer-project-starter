@@ -68,7 +68,7 @@ func makeRouter(service *RaceService) http.Handler {
 func startRace(service *RaceService) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
-		fmt.Printf("params ::: %#v\r\n", params)
+		fmt.Printf("startRace - params ::: %#v\r\n", params)
 		fmt.Println("GOT TO ERROR 1")
 
 		raceID, err := strconv.ParseUint(params["raceID"], 10, 64)
@@ -144,14 +144,14 @@ func createRace(service *RaceService) http.HandlerFunc {
 		var params createRaceParams
 
 		fmt.Printf("%v\n", r)
-		fmt.Printf("params ::: %#v\r\n", params)
+		fmt.Printf("createRace - params 1::: %#v\r\n", params)
 
 		if err := json.NewDecoder(r.Body).Decode(&params); err != nil {
 			fmt.Println("GOT TO ERROR 1")
 			panicErr(err)
 			return
 		}
-
+		fmt.Printf("createRace - params 2::: %#v\r\n", params)
 		race, err := service.CreateRace(params.PlayerID, params.TrackID)
 		if err != nil {
 			fmt.Println("GOT TO ERROR 2")
