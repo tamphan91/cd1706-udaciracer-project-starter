@@ -7,6 +7,7 @@ let store = {
   player_id: undefined,
   player_name: undefined,
   race_id: undefined,
+  isStarted: false,
 };
 
 // We need our javascript to wait until the DOM is loaded
@@ -117,6 +118,7 @@ async function handleCreateRace() {
   // call the async function startRace
   // TIP - remember to always check if a function takes parameters before calling it!
   await startRace(race_id);
+  store.isStarted = true;
   console.log("store2", store);
   // call the async function runRace
   runRace(race_id);
@@ -208,7 +210,9 @@ function handleSelectTrack(target) {
 function handleAccelerate() {
   console.log("accelerate button clicked");
   // Invoke the API call to accelerate
-  accelerate(store.race_id);
+  if (store.isStarted) {
+    accelerate(store.race_id);
+  }
 }
 
 // HTML VIEWS ------------------------------------------------
@@ -423,9 +427,7 @@ function startRace(id) {
   return fetch(`${SERVER}/api/races/${id}/start`, {
     method: "POST",
     ...defaultFetchOpts(),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.log("Problem with startRace request::", err));
+  }).catch((err) => console.log("Problem with startRace request::", err));
 }
 
 function accelerate(id) {
@@ -435,7 +437,5 @@ function accelerate(id) {
   return fetch(`${SERVER}/api/races/${id}/accelerate`, {
     method: "POST",
     ...defaultFetchOpts(),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.log("Problem with accelerate request::", err));
+  }).catch((err) => console.log("Problem with accelerate request::", err));
 }
